@@ -51,7 +51,7 @@ defmodule BankID.MixProject do
       links: %{
         "GitHub" => @source_url
       },
-      files: ~w(lib priv .formatter.exs mix.exs README.md LICENSE CHANGELOG.md)
+      files: ~w(lib priv .formatter.exs mix.exs README.md LICENSE)
     ]
   end
 
