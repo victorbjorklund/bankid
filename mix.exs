@@ -2,7 +2,7 @@ defmodule BankID.MixProject do
   use Mix.Project
 
   @version "0.2.0"
-  @source_url "https://github.com/yourusername/bankid"
+  @source_url "https://github.com/victorbjorklund/bankid"
 
   def project do
     [
@@ -60,8 +60,7 @@ defmodule BankID.MixProject do
       main: "readme",
       source_url: @source_url,
       extras: [
-        "README.md",
-        "CHANGELOG.md"
+        "README.md"
       ],
       groups_for_modules: [
         Core: [
