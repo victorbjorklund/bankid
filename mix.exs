@@ -26,13 +26,13 @@ defmodule BankID.MixProject do
   defp deps do
     [
       # HTTP client for BankID API
-      {:req, "~> 0.5.0"},
+      {:req, "~> 0.6"},
 
       # QR code generation
-      {:qrcode_ex, "~> 0.1.0"},
+      {:qrcode_ex, "~> 0.1"},
 
       # Documentation
-      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.40", only: :dev, runtime: false}
     ]
   end
 
