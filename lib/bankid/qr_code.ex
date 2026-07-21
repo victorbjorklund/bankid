@@ -33,7 +33,6 @@ defmodule BankID.QRCode do
 
   ## Options
   - `:width` - Width of the QR code in pixels (default: 256)
-  - `:shape` - Shape of QR modules ("square" or "circle", default: "square")
   - `:color` - Color of the QR code modules (default: "#000")
   - `:background_color` - Background color of the QR code (default: "#FFF")
   """
@@ -97,8 +96,7 @@ defmodule BankID.QRCode do
   - start_time: Timestamp when authentication was initiated (Unix timestamp)
   - qr_start_secret: Secret from authentication response
   - opts: Optional keyword list for QR code generation:
-    - :width - Width of the QR code (default: 256)
-    - :shape - Shape of the QR code ("square" or "circle", default: "square")
+    - :width - Width of the QR code in pixels (default: 256)
     - :color - Color of the QR code (default: "#000")
     - :background_color - Background color (default: "#FFF")
 
@@ -113,17 +111,18 @@ defmodule BankID.QRCode do
       # Customized QR code
       svg = BankID.QRCode.generate_svg(token, start_time, secret,
         width: 300,
-        color: "#0066CC",
-        shape: "circle"
+        color: "#0066CC"
       )
   """
   @spec generate_svg(String.t(), integer(), String.t(), qr_options()) :: String.t()
   def generate_svg(qr_start_token, start_time, qr_start_secret, opts \\ []) do
     require Logger
     width = Keyword.get(opts, :width, 256)
-    shape = Keyword.get(opts, :shape, "square")
     color = Keyword.get(opts, :color, "#000")
     background_color = Keyword.get(opts, :background_color, "#FFF")
+
+    # Convert width to scale (approx 21 modules per QR code, scale 10 ≈ 210px)
+    scale = max(1, div(width * 10, 210))
 
     # Generate the QR code content (elapsed_seconds calculated internally)
     qr_content = generate_content(qr_start_token, start_time, qr_start_secret)
@@ -131,15 +130,17 @@ defmodule BankID.QRCode do
     Logger.debug("About to encode QR content: #{qr_content}")
 
     # Encode to SVG
+    svg_settings = struct!(QRCode.Render.SvgSettings, %{
+      scale: scale,
+      qrcode_color: color,
+      background_color: background_color
+    })
+
     svg =
       qr_content
-      |> QRCodeEx.encode()
-      |> QRCodeEx.svg(
-        width: width,
-        shape: shape,
-        color: color,
-        background_color: background_color
-      )
+      |> QRCode.create()
+      |> QRCode.Render.render(:svg, svg_settings)
+      |> elem(1)
 
     Logger.debug(
       "Generated SVG length: #{String.length(svg)}, first 100 chars: #{String.slice(svg, 0, 100)}"

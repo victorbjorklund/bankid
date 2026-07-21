@@ -1,7 +1,7 @@
 defmodule BankID.MixProject do
   use Mix.Project
 
-  @version "0.0.2"
+  @version "0.0.3"
   @source_url "https://github.com/victorbjorklund/bankid"
 
   def project do
@@ -29,7 +29,7 @@ defmodule BankID.MixProject do
       {:req, "~> 0.6"},
 
       # QR code generation
-      {:qrcode_ex, "~> 0.1"},
+      {:qr_code, "~> 3.2"},
 
       # Documentation
       {:ex_doc, "~> 0.40", only: :dev, runtime: false}
